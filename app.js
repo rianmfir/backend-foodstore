@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const productRoute = require('./app/product/router');
 const categoryRoute = require('./app/category/router');
+const tagRoute = require('./app/tag/router');
 
 var app = express();
 
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', productRoute);
 app.use('/api', categoryRoute);
+app.use('/api', tagRoute);
 
 // home
 app.use('/', (req, res) => {
