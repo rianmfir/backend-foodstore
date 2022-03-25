@@ -7,15 +7,53 @@ const Tag = require('../tag/model');
 
 const index = async (req, res, next) => {
     try {
-        let { skip = 0, limit = 10 } = req.query;
+        let { skip = 0, limit = 10, q = '', category = '', tags = [] } = req.query;
+
+        // Filter
+        let criteria = {};
+
+        if (q.length) {
+            criteria = {
+                ...criteria,
+                name: { $regex: `${q}`, $options: 'i' }
+            }
+        }
+
+        if (category.length) {
+            let categoryResult = await Category.findOne({ name: { $regex: `${category}` }, $options: '1' });
+
+            if (categoryResult) {
+                criteria = { ...criteria, category: categoryResult._id }
+            }
+        }
+
+        if (tags.length) {
+            let tagsResult = await Tag.find({ name: { $in: tags } });
+
+            if (tagsResult) {
+                criteria
+            }
+
+
+            criteria = {
+                ...criteria, tags: { $in: tagsResult.map(tag => tag._id) }
+            }
+        }
+        // Akhir Filter
+
+        // Count
+        let count = await Product.find().countDocuments();
         let product = await Product
-            .find()
+            .find(criteria)
             // Pagination
             .skip(parseInt(skip))
             .limit(parseInt(limit))
             .populate('category')
             .populate('tags');
-        return res.json(product);
+        return res.json({
+            data: product,
+            count
+        });
     } catch (err) {
         next(err);
     }
