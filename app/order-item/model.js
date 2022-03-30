@@ -15,7 +15,7 @@ const orderItemSchema = Schema({
     },
 
     qty: {
-        type: Nukber,
+        type: Number,
         min: [1, 'Kuantitas minimal 1'],
         required: [true, 'Kuantitas harus diisi'],
     },
