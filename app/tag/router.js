@@ -3,6 +3,9 @@ const { police_check } = require('../../middlewares');
 const tagController = require('./controller');
 
 router.get('/tags', tagController.index);
+router.get('/tags/:category', 
+  tagController.showTagByCategory
+);
 router.post('/tags',
     police_check('create', 'Tag'),
     tagController.store

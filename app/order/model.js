@@ -35,14 +35,15 @@ const orderSchema = Schema({
 
 orderSchema.plugin(AutoIncrement, { inc_field: 'order_number' });
 orderSchema.virtual('items_count').get(function () {
-    return this.order_items.reduce((total, item) => total + parseInt(item.price), 0);
+    //return this.order_items.reduce((total, item) => total + parseInt(item.price), 0);
+        return this.order_items.reduce((total, item) => total + parseInt(item.qty), 0);
 });
 
 orderSchema.post('save', async function () {
-    let sub_total = this.order_item.reduce((total, item) => total += (item.price * item.qty), 0);
+    let sub_total = this.order_items.reduce((total, item) => total += (item.price * item.qty), 0);
     let invoice = new Invoice({
         user: this.user,
-        oreder: this._id,
+        order: this._id,
         sub_total: sub_total,
         delivery_fee: parseInt(this.delivery_fee),
         total: parseInt(sub_total + this.delivery_fee),

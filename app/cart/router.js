@@ -3,13 +3,13 @@ const { police_check } = require('../../middlewares');
 const cartController = require('./controller');
 
 router.put(
-    '/cart',
+    '/carts',
     police_check('update', 'Cart'),
     cartController.update
 )
 
 router.get(
-    '/cart',
+    '/carts',
     police_check('read', 'Cart'),
     cartController.index
 )

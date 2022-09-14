@@ -91,10 +91,49 @@ const me = (req, res, next) => {
     res.json(req.user);
 }
 
+const users = async (req, res, next) => {
+   try {
+    let {skip = 0, limit = 10} = req.query;
+
+    let count = await User.find({role:"user"}).countDocuments();
+    let users = 
+      await User
+      .find()
+      .sort('-customer_id')
+      .skip(parseInt(skip))
+      .limit(parseInt(limit))
+      
+    let listUser = users.map(user => {
+    	return {
+    		customer_id : user.customer_id,
+    		email : user.email,
+    		role : user.role,
+    		status : user.token.length ? 1 : 0
+    		}
+    })
+    
+     return res.json({
+      users: listUser,
+      count
+    })
+  } catch (err) {
+    if(err && err.name == 'ValidationError'){
+      return res.json({
+        error: 1, 
+        message: err.message, 
+        fields: err.errors,
+      });
+    }
+
+    next(err);
+  }
+}
+
 module.exports = {
     register,
     localStrategy,
     login,
     logout,
-    me
+    me,
+    users
 }

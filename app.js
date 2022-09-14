@@ -15,6 +15,7 @@ const deliveryAddressRoute = require('./app/delivery-address/router');
 const cartRoute = require('./app/cart/router');
 const orderRoute = require('./app/order/router');
 const invoiceRoute = require('./app/invoice/router');
+//import bodyParser from "body-parser"
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(decodeToken());
+//body parser
 
 app.use('/auth', authRoute);
 app.use('/api', productRoute);
@@ -63,3 +65,8 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+//npm install body-parser
+//import bodyParser from "body-parser"
+//app.use(bodyParser.urlencoded({ extended: false }))
+
